@@ -2,49 +2,61 @@ const asyncHandler = require("express-async-handler");
 const { getAllStudents, addNewStudent, getStudentDetail, setStudentStatus, updateStudent } = require("./students-service");
 
 const handleGetAllStudents = asyncHandler(async (req, res) => {
-    const payload = req.body;
+    const { name, className, section, roll } = req.query;
 
-    const allStudents = getAllStudents(payload);
-  
+    const payload = {
+        name,
+        className,
+        section,
+        roll
+    };
+
+    const allStudents = await getAllStudents(payload);
+
     res.json({
-      students: allStudents,
+        students: allStudents,
     });
 });
 
 const handleAddStudent = asyncHandler(async (req, res) => {
-    const payload = req.body
+    const payload = req.body;
 
-    const student = addNewStudent(payload);
+    const result = await addNewStudent(payload); 
 
     return res.json({
-       student,
+        message: result.message, 
     });
 });
 
 const handleUpdateStudent = asyncHandler(async (req, res) => {
-    const payload = req.body
+    const payload = req.body;
+    const { id: userId } = req.params;
 
-    const student = updateStudent(payload);
+    const result = await updateStudent({ ...payload, userId }); 
+
     return res.json({
-       student,
+        message: result.message, 
     });
 });
 
 const handleGetStudentDetail = asyncHandler(async (req, res) => {
     const { id } = req.params;
 
-    const student = getStudentDetail(id);
+    const student = await getStudentDetail(id); 
+
     return res.json({
-       student,
+        student,
     });
 });
 
 const handleStudentStatus = asyncHandler(async (req, res) => {
     const { id } = req.params;
     const { status, reviewerId } = req.body;
-    const student = setStudentStatus({userId: id, reviewerId, status});
+
+    const result = await setStudentStatus({ userId: id, reviewerId, status }); // Adicionando await
+
     return res.json({
-       student,
+        message: result.message, // Retornando a mensagem de sucesso ou falha
     });
 });
 
