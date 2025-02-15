@@ -12,13 +12,16 @@ const handleGetAllStudents = asyncHandler(async (req, res) => {
 });
 
 const handleAddStudent = asyncHandler(async (req, res) => {
-    //write your code
+    const payload = req.body
 
+    const student = addNewStudent(payload);
+
+    return res.json({
+       student,
+    });
 });
 
 const handleUpdateStudent = asyncHandler(async (req, res) => {
-    //write your code
-
 });
 
 const handleGetStudentDetail = asyncHandler(async (req, res) => {
